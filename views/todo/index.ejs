@@ -1,0 +1,95 @@
+<%- include('../layouts/header') %>
+
+
+<section class="my-5 gradient-custom vh-100">
+    <div class="container-fluid">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col col-lg-9 col-xl-7">
+          <div class="card rounded-3 my-card">
+            <div class="card-body p-4">
+  
+              <h4 class="text-center my-3 pb-3">To Do App</h4>
+  
+              <form action="/store" method="POST" class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
+                <div class="col-8">
+                  <div class="form-outline">
+                    <input type="text" name="text" class="form-control" />
+                  </div>
+                </div>
+  
+                <div class="col-4">
+                  <button type="submit" class="btn btn-primary btn-block">Save</button>
+                </div>
+              </form>
+  
+              <table class="table mb-4">
+                <thead>
+                  <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Todo item</th>
+                    <th scope="col" class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% if(todo && todo.length > 0){ 
+                      todo.map((item, i)=>{ %>
+                        <tr>
+                            <th scope="row"><%= i+1 %></th>
+                            <td><%= item.text %></td>
+                            <td class="text-center">                                
+                                <form action="/delete/<%= item.id %>" method="POST">
+                                    <a href="javascript:void(0)" class="btn btn-success ms-1" onclick="updateEditForm('<%= item.id %>', '<%= item.text %>')" data-toggle="modal" data-target="#exampleModalCenter">
+                                        <i class="fa fa-edit text-white"></i>
+                                    </a>
+                                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                </form>
+                            </td>
+                          </tr>
+                        <% })
+                    }else { %>
+                    <tr>
+                        <td colspan="3" class="text-center">No Todo Found</td>
+                    </tr>
+                    <% } %>
+                </tbody>
+              </table>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content my-card">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Edit Todo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="" method="POST" id="editForm">
+            <div class="modal-body">                
+                <input type="text" name="text" id="editFormText" class="form-control" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-info">Save Changes</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>
+
+<script>
+    function updateEditForm(id, text){
+        $('#editForm').attr('action', '/update/'+id);
+        $('#editFormText').val(text);
+    }
+</script>
